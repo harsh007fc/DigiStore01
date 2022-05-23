@@ -11,12 +11,9 @@ import {
   createProduct,
 } from '../actions/productActions'
 import { PRODUCT_CREATE_RESET } from '../constants/productConstants'
-import { useNavigate, useParams } from 'react-router-dom'
 
-const ProductListScreen = () => {
-    const params = useParams()
-    const navigate = useNavigate()
-  const pageNumber = params.pageNumber || 1
+const ProductListScreen = ({ history, match }) => {
+  const pageNumber = match.params.pageNumber || 1
 
   const dispatch = useDispatch()
 
@@ -45,17 +42,17 @@ const ProductListScreen = () => {
     dispatch({ type: PRODUCT_CREATE_RESET })
 
     if (!userInfo || !userInfo.isAdmin) {
-        navigate('/login')
+      history.push('/login')
     }
 
     if (successCreate) {
-        navigate(`/admin/product/${createdProduct._id}/edit`)
+      history.push(`/admin/product/${createdProduct._id}/edit`)
     } else {
       dispatch(listProducts('', pageNumber))
     }
   }, [
     dispatch,
-    navigate,
+    history,
     userInfo,
     successDelete,
     successCreate,
